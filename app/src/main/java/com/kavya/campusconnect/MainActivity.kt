@@ -13,15 +13,17 @@ import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffo
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
-import com.kavya.campusconnect.ui.theme.CampusConnectTheme
+import com.kavya.campusconnect.data.repository.EventRepositoryImpl
 import com.kavya.campusconnect.ui.screens.EventsScreen
 import com.kavya.campusconnect.ui.screens.HomeScreen
 import com.kavya.campusconnect.ui.screens.ServicesScreen
+import com.kavya.campusconnect.ui.theme.CampusConnectTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,6 +41,8 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun CampusConnectApp() {
     var currentDestination by rememberSaveable { mutableStateOf(AppDestinations.HOME) }
+    val eventRepository = remember { EventRepositoryImpl() }
+    val events = remember(eventRepository) { eventRepository.getEvents() }
 
     NavigationSuiteScaffold(
         navigationSuiteItems = {
@@ -60,7 +64,10 @@ fun CampusConnectApp() {
         Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
             when (currentDestination) {
                 AppDestinations.HOME -> HomeScreen(Modifier.padding(innerPadding))
-                AppDestinations.EVENTS -> EventsScreen(Modifier.padding(innerPadding))
+                AppDestinations.EVENTS -> EventsScreen(
+                    events = events,
+                    modifier = Modifier.padding(innerPadding)
+                )
                 AppDestinations.SERVICES -> ServicesScreen(Modifier.padding(innerPadding))
             }
         }
