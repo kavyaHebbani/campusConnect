@@ -23,7 +23,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 import com.kavya.campusconnect.ui.screens.EventsScreen
 import com.kavya.campusconnect.ui.screens.HomeScreen
-import com.kavya.campusconnect.ui.screens.ServicesScreen
+import com.kavya.campusconnect.ui.screens.MessagesScreen
 import com.kavya.campusconnect.ui.theme.CampusConnectTheme
 import com.kavya.campusconnect.ui.viewmodel.EventsViewModel
 
@@ -71,7 +71,7 @@ fun CampusConnectApp() {
                     onRetry = eventsViewModel::loadEvents,
                     modifier = Modifier.padding(innerPadding)
                 )
-                AppDestinations.SERVICES -> ServicesScreen(Modifier.padding(innerPadding))
+                AppDestinations.MESSAGES -> MessagesScreen(Modifier.padding(innerPadding))
             }
         }
     }
@@ -83,5 +83,5 @@ enum class AppDestinations(
 ) {
     HOME("Home", R.drawable.ic_home),
     EVENTS("Events", R.drawable.ic_favorite),
-    SERVICES("Services", R.drawable.ic_account_box),
+    MESSAGES("Messages", R.drawable.ic_account_box),
 }
