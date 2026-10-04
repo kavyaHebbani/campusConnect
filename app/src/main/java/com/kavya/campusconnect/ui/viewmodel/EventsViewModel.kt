@@ -1,12 +1,15 @@
 package com.kavya.campusconnect.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.kavya.campusconnect.domain.repository.EventRepository
 import com.kavya.campusconnect.model.CampusEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 sealed interface EventsUiState {
@@ -27,11 +30,15 @@ class EventsViewModel @Inject constructor(
     }
 
     fun loadEvents() {
-        _uiState.value = EventsUiState.Loading
-        _uiState.value = try {
-            EventsUiState.Success(eventRepository.getEvents())
-        } catch (exception: Exception) {
-            EventsUiState.Error(exception.message ?: "Couldn't load events.")
+        viewModelScope.launch {
+            _uiState.value = EventsUiState.Loading
+            _uiState.value = try {
+                EventsUiState.Success(eventRepository.getEvents())
+            } catch (cancellationException: CancellationException) {
+                throw cancellationException
+            } catch (exception: Exception) {
+                EventsUiState.Error(exception.message ?: "Couldn't load events.")
+            }
         }
     }
 }

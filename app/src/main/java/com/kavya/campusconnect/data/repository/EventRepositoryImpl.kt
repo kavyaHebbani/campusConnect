@@ -6,5 +6,5 @@ import com.kavya.campusconnect.model.CampusEvent
 import javax.inject.Inject
 
 class EventRepositoryImpl @Inject constructor() : EventRepository {
-    override fun getEvents(): List<CampusEvent> = sampleEvents
+    override suspend fun getEvents(): List<CampusEvent> = sampleEvents
 }
