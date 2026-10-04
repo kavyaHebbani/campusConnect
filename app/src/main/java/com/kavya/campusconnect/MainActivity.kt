@@ -13,18 +13,21 @@ import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffo
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.PreviewScreenSizes
-import com.kavya.campusconnect.data.repository.EventRepositoryImpl
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
+import dagger.hilt.android.AndroidEntryPoint
+
 import com.kavya.campusconnect.ui.screens.EventsScreen
 import com.kavya.campusconnect.ui.screens.HomeScreen
 import com.kavya.campusconnect.ui.screens.ServicesScreen
 import com.kavya.campusconnect.ui.theme.CampusConnectTheme
+import com.kavya.campusconnect.ui.viewmodel.EventsViewModel
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,12 +40,11 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@PreviewScreenSizes
 @Composable
 fun CampusConnectApp() {
     var currentDestination by rememberSaveable { mutableStateOf(AppDestinations.HOME) }
-    val eventRepository = remember { EventRepositoryImpl() }
-    val events = remember(eventRepository) { eventRepository.getEvents() }
+    val eventsViewModel: EventsViewModel = viewModel()
+    val eventsUiState by eventsViewModel.uiState.collectAsStateWithLifecycle()
 
     NavigationSuiteScaffold(
         navigationSuiteItems = {
@@ -65,7 +67,8 @@ fun CampusConnectApp() {
             when (currentDestination) {
                 AppDestinations.HOME -> HomeScreen(Modifier.padding(innerPadding))
                 AppDestinations.EVENTS -> EventsScreen(
-                    events = events,
+                    uiState = eventsUiState,
+                    onRetry = eventsViewModel::loadEvents,
                     modifier = Modifier.padding(innerPadding)
                 )
                 AppDestinations.SERVICES -> ServicesScreen(Modifier.padding(innerPadding))
