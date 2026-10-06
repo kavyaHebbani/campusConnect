@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.kavya.campusconnect.domain.repository.EventRepository
 import com.kavya.campusconnect.model.CampusEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -34,10 +33,8 @@ class EventsViewModel @Inject constructor(
             _uiState.value = EventsUiState.Loading
             _uiState.value = try {
                 EventsUiState.Success(eventRepository.getEvents())
-            } catch (cancellationException: CancellationException) {
-                throw cancellationException
-            } catch (exception: Exception) {
-                EventsUiState.Error(exception.message ?: "Couldn't load events.")
+            } catch (ex: Exception) {
+                EventsUiState.Error(ex.message ?: "Couldn't load events.")
             }
         }
     }

@@ -26,6 +26,7 @@ import com.kavya.campusconnect.ui.screens.HomeScreen
 import com.kavya.campusconnect.ui.screens.MessagesScreen
 import com.kavya.campusconnect.ui.theme.CampusConnectTheme
 import com.kavya.campusconnect.ui.viewmodel.EventsViewModel
+import com.kavya.campusconnect.ui.viewmodel.HomeViewModel
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -45,6 +46,8 @@ fun CampusConnectApp() {
     var currentDestination by rememberSaveable { mutableStateOf(AppDestinations.HOME) }
     val eventsViewModel: EventsViewModel = viewModel()
     val eventsUiState by eventsViewModel.uiState.collectAsStateWithLifecycle()
+    val homeViewModel: HomeViewModel = viewModel()
+    val homeUiState by homeViewModel.uiState.collectAsStateWithLifecycle()
 
     NavigationSuiteScaffold(
         navigationSuiteItems = {
@@ -65,7 +68,12 @@ fun CampusConnectApp() {
     ) {
         Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
             when (currentDestination) {
-                AppDestinations.HOME -> HomeScreen(Modifier.padding(innerPadding))
+                AppDestinations.HOME -> HomeScreen(
+                    onEventsClick = { currentDestination = AppDestinations.EVENTS },
+                    onRetry = homeViewModel::loadUserProfile,
+                    modifier = Modifier.padding(innerPadding),
+                    uiState = homeUiState
+                )
                 AppDestinations.EVENTS -> EventsScreen(
                     uiState = eventsUiState,
                     onRetry = eventsViewModel::loadEvents,
