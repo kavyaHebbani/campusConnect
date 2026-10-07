@@ -1,7 +1,8 @@
 package com.kavya.campusconnect.data
 
-import com.kavya.campusconnect.model.UserSchedule
+import com.kavya.campusconnect.model.UserAcademicProfile
 import com.kavya.campusconnect.model.UserProfile
+import com.kavya.campusconnect.model.UserSchedule
 
 val userScheduleOfTheDays = listOf(
     UserSchedule(
@@ -24,10 +25,18 @@ val userScheduleOfTheDays = listOf(
     )
 )
 
+val sampleUserAcademicProfile = UserAcademicProfile(
+    gpa = 8.5,
+    hours = 200,
+    attendance = "80/100",
+    advisor = "Emma"
+)
+
 val sampleUserProfile = UserProfile(
     id = 12345,
     name = "Jake",
     age = 20,
     userSchedule = userScheduleOfTheDays,
-    gpa = "8.5"
+    academicProfile = sampleUserAcademicProfile,
+    financials = mapOf("parking" to 0, "tuition" to 500, "dining" to 20)
 )

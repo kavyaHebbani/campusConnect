@@ -24,9 +24,11 @@ import dagger.hilt.android.AndroidEntryPoint
 import com.kavya.campusconnect.ui.screens.EventsScreen
 import com.kavya.campusconnect.ui.screens.HomeScreen
 import com.kavya.campusconnect.ui.screens.MessagesScreen
+import com.kavya.campusconnect.ui.screens.ProfileScreen
 import com.kavya.campusconnect.ui.theme.CampusConnectTheme
 import com.kavya.campusconnect.ui.viewmodel.EventsViewModel
 import com.kavya.campusconnect.ui.viewmodel.HomeViewModel
+import com.kavya.campusconnect.ui.viewmodel.ProfileViewModel
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -48,6 +50,8 @@ fun CampusConnectApp() {
     val eventsUiState by eventsViewModel.uiState.collectAsStateWithLifecycle()
     val homeViewModel: HomeViewModel = viewModel()
     val homeUiState by homeViewModel.uiState.collectAsStateWithLifecycle()
+    val profileViewModel: ProfileViewModel = viewModel()
+    val profileUiState by profileViewModel.uiState.collectAsStateWithLifecycle()
 
     NavigationSuiteScaffold(
         navigationSuiteItems = {
@@ -80,6 +84,11 @@ fun CampusConnectApp() {
                     modifier = Modifier.padding(innerPadding)
                 )
                 AppDestinations.MESSAGES -> MessagesScreen(Modifier.padding(innerPadding))
+                AppDestinations.PROFILE -> ProfileScreen(
+                    uiState = profileUiState,
+                    onRetry = profileViewModel::loadUserProfile,
+                    modifier = Modifier.padding(innerPadding)
+                )
             }
         }
     }
@@ -92,4 +101,5 @@ enum class AppDestinations(
     HOME("Home", R.drawable.ic_home),
     EVENTS("Events", R.drawable.ic_favorite),
     MESSAGES("Messages", R.drawable.ic_account_box),
+    PROFILE("Profile", R.drawable.ic_account_box),
 }

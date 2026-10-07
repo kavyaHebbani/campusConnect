@@ -5,5 +5,6 @@ data class UserProfile(
     val name: String,
     val age: Int,
     val userSchedule: List<UserSchedule>,
-    val gpa: String
+    val academicProfile: UserAcademicProfile,
+    val financials: Map<String, Long>
 )
