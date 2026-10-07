@@ -48,18 +48,6 @@ fun HomeScreen(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Text(
-            text = "Welcome to Your Campus",
-            style = MaterialTheme.typography.headlineSmall
-        )
-        Text(
-            text = "Your campus, all in one place.",
-            style = MaterialTheme.typography.bodyLarge,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        Text(
             text = "Quick Links",
             style = MaterialTheme.typography.titleLarge
         )

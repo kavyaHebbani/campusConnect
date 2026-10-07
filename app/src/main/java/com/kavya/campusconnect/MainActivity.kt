@@ -5,10 +5,15 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -29,6 +34,9 @@ import com.kavya.campusconnect.ui.theme.CampusConnectTheme
 import com.kavya.campusconnect.ui.viewmodel.EventsViewModel
 import com.kavya.campusconnect.ui.viewmodel.HomeViewModel
 import com.kavya.campusconnect.ui.viewmodel.ProfileViewModel
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -44,6 +52,7 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
+@OptIn(ExperimentalMaterial3Api::class)
 fun CampusConnectApp() {
     var currentDestination by rememberSaveable { mutableStateOf(AppDestinations.HOME) }
     val eventsViewModel: EventsViewModel = viewModel()
@@ -70,7 +79,38 @@ fun CampusConnectApp() {
             }
         }
     ) {
-        Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+        Scaffold(
+            modifier = Modifier.fillMaxSize(),
+            topBar = {
+                TopAppBar(
+                    title = {
+                        if (currentDestination == AppDestinations.HOME) {
+                            Column {
+                                Text(
+                                    "Welcome to Your Campus",
+                                    style = MaterialTheme.typography.titleLarge
+                                )
+                                Text(
+                                    LocalDate.now().format(
+                                        DateTimeFormatter.ofPattern("EEEE, MMMM d", Locale.getDefault())
+                                    ),
+                                    style = MaterialTheme.typography.labelMedium
+                                )
+                            }
+                        } else {
+                            Text(
+                                currentDestination.label,
+                                style = MaterialTheme.typography.titleLarge
+                            )
+                        }
+                    },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        titleContentColor = MaterialTheme.colorScheme.onPrimary
+                    )
+                )
+            }
+        ) { innerPadding ->
             when (currentDestination) {
                 AppDestinations.HOME -> HomeScreen(
                     onEventsClick = { currentDestination = AppDestinations.EVENTS },
