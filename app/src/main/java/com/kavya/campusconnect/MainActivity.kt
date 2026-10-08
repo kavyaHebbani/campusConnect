@@ -7,6 +7,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -22,11 +23,13 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 import com.kavya.campusconnect.ui.screens.EventsScreen
+import com.kavya.campusconnect.ui.screens.CampusServicesScreen
 import com.kavya.campusconnect.ui.screens.HomeScreen
 import com.kavya.campusconnect.ui.screens.MessagesScreen
 import com.kavya.campusconnect.ui.screens.ProfileScreen
@@ -69,7 +72,8 @@ fun CampusConnectApp() {
                     icon = {
                         Icon(
                             painterResource(it.icon),
-                            contentDescription = it.label
+                            contentDescription = it.label,
+                            modifier = Modifier.size(22.dp)
                         )
                     },
                     label = { Text(it.label) },
@@ -92,7 +96,10 @@ fun CampusConnectApp() {
                                 )
                                 Text(
                                     LocalDate.now().format(
-                                        DateTimeFormatter.ofPattern("EEEE, MMMM d", Locale.getDefault())
+                                        DateTimeFormatter.ofPattern(
+                                            "EEEE, MMMM d",
+                                            Locale.getDefault()
+                                        )
                                     ),
                                     style = MaterialTheme.typography.labelMedium
                                 )
@@ -114,19 +121,29 @@ fun CampusConnectApp() {
             when (currentDestination) {
                 AppDestinations.HOME -> HomeScreen(
                     onEventsClick = { currentDestination = AppDestinations.EVENTS },
+                    onCampusServicesClick = {
+                        currentDestination = AppDestinations.CAMPUS_SERVICES
+                    },
+                    onPaymentClick = { currentDestination = AppDestinations.PROFILE },
                     onRetry = homeViewModel::loadUserProfile,
                     modifier = Modifier.padding(innerPadding),
                     uiState = homeUiState
                 )
+
                 AppDestinations.EVENTS -> EventsScreen(
                     uiState = eventsUiState,
                     onRetry = eventsViewModel::loadEvents,
                     modifier = Modifier.padding(innerPadding)
                 )
+
                 AppDestinations.MESSAGES -> MessagesScreen(Modifier.padding(innerPadding))
                 AppDestinations.PROFILE -> ProfileScreen(
                     uiState = profileUiState,
                     onRetry = profileViewModel::loadUserProfile,
+                    modifier = Modifier.padding(innerPadding)
+                )
+
+                AppDestinations.CAMPUS_SERVICES -> CampusServicesScreen(
                     modifier = Modifier.padding(innerPadding)
                 )
             }
@@ -142,4 +159,5 @@ enum class AppDestinations(
     EVENTS("Events", R.drawable.ic_favorite),
     MESSAGES("Messages", R.drawable.ic_account_box),
     PROFILE("Profile", R.drawable.ic_account_box),
+    CAMPUS_SERVICES("Campus", R.drawable.ic_map),
 }

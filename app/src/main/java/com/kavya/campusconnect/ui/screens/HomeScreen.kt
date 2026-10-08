@@ -37,6 +37,8 @@ fun HomeScreen(
     uiState: HomeUiState,
     onRetry: () -> Unit,
     onEventsClick: () -> Unit,
+    onCampusServicesClick: () -> Unit,
+    onPaymentClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -62,8 +64,12 @@ fun HomeScreen(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 QuickLinkCard("Register for classes", Modifier.weight(1f))
-                QuickLinkCard("Resources", Modifier.weight(1f))
-                QuickLinkCard("Campus map", Modifier.weight(1f))
+                QuickLinkCard("Announcements", Modifier.weight(1f))
+                QuickLinkCard(
+                    label = "Campus map",
+                    modifier = Modifier.weight(1f),
+                    onClick = onCampusServicesClick
+                )
                 QuickLinkCard("My Grades", Modifier.weight(1f))
             }
         }
@@ -114,44 +120,67 @@ fun HomeScreen(
 
         FeatureCard(
             title = "Events",
-            description = "Find activities and events happening on campus.",
+            description = "Find activities and events happening on campus",
             onClick = onEventsClick
         )
         FeatureCard(
-            title = "Dining",
-            description = "See dining options and plan your next meal."
+            title = "Payments",
+            description = "See pending payment details",
+            onClick = onPaymentClick
         )
         FeatureCard(
-            title = "Campus services",
-            description = "Discover the services and resources available to you."
+            title = "Campus",
+            description = "Explore the campus map and cafeteria menu",
+            onClick = onCampusServicesClick
         )
 
     }
 }
 
 @Composable
-private fun QuickLinkCard(label: String, modifier: Modifier = Modifier) {
-    Card(
-        modifier = modifier,
-        shape = MaterialTheme.shapes.large,
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.secondaryContainer
-        )
-    ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .heightIn(min = 88.dp)
-                .padding(8.dp),
-            contentAlignment = Alignment.Center
+private fun QuickLinkCard(
+    label: String,
+    modifier: Modifier = Modifier,
+    onClick: (() -> Unit)? = null
+) {
+    val cardColors = CardDefaults.cardColors(
+        containerColor = MaterialTheme.colorScheme.secondaryContainer
+    )
+    if (onClick == null) {
+        Card(
+            modifier = modifier,
+            shape = MaterialTheme.shapes.large,
+            colors = cardColors,
         ) {
-            Text(
-                text = label,
-                style = MaterialTheme.typography.titleSmall,
-                color = MaterialTheme.colorScheme.onSecondaryContainer,
-                textAlign = TextAlign.Center
-            )
+            QuickLinkCardContent(label)
         }
+    } else {
+        Card(
+            onClick = onClick,
+            modifier = modifier,
+            shape = MaterialTheme.shapes.large,
+            colors = cardColors,
+        ) {
+            QuickLinkCardContent(label)
+        }
+    }
+}
+
+@Composable
+private fun QuickLinkCardContent(label: String) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .heightIn(min = 88.dp)
+            .padding(8.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = label,
+            style = MaterialTheme.typography.titleSmall,
+            color = MaterialTheme.colorScheme.onSecondaryContainer,
+            textAlign = TextAlign.Center
+        )
     }
 }
 

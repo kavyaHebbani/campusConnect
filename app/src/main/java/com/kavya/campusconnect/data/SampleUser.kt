@@ -38,5 +38,5 @@ val sampleUserProfile = UserProfile(
     age = 20,
     userSchedule = userScheduleOfTheDays,
     academicProfile = sampleUserAcademicProfile,
-    financials = mapOf("parking" to 0, "tuition" to 500, "dining" to 20)
+    financials = mapOf("parking" to 0, "tuition" to 1000, "cafeteria" to 40, "prints" to 0)
 )
